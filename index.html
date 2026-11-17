@@ -441,12 +441,7 @@ body.present #toTop{display:none}
         <div class="chips" role="group" aria-label="Era"><button class="chip" id="era1945" aria-pressed="false" type="button">1945 · Prize</button><button class="chip" id="era2026" aria-pressed="true" type="button">2026 · Exclave</button></div>
         <p id="eraTxt" style="color:var(--soft);font-size:16px;line-height:1.6"></p>
         <span class="tag" id="eraTag"></span>
-        <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-          <div class="card"><span class="k">Population</span><span class="big">1.03 M</span><p>1,032,904 on 1 Jan 2025 [S26]</p></div>
-          <div class="card"><span class="k">Suwałki gap</span><span class="big">65 km</span><p>Polish–Lithuanian border to Belarus, most cited figure [S36]</p></div>
-          <div class="card"><span class="k">Baltic Fleet</span><span class="big">Baltiysk</span><p>Russia’s ice-free Baltic base</p></div>
-          <div class="card"><span class="k">Neighbours</span><span class="big">2</span><p>Both NATO and EU members</p></div>
-        </div>
+        <div class="grid" id="eraCards" aria-live="polite" style="grid-template-columns:repeat(2,minmax(0,1fr))"></div>
       </div>
       <div class="mapbox" style="flex:1.2 1 460px;min-width:0" id="b-kal">
         <div class="map" id="m-kal" role="img" aria-label="Kaliningrad exclave between Poland and Lithuania, with the Suwałki gap to Belarus"></div>
@@ -670,6 +665,7 @@ S35:['Encyclopaedia Britannica. “Ural Mountains”: a range of about 2,500 km 
 S36:['Suwałki Gap: the Polish–Lithuanian border strip of about 65 km between Kaliningrad Oblast and Belarus (most cited figure; other measurements give 60–100 km).','https://en.wikipedia.org/wiki/Suwa%C5%82ki_Gap'],
 S37:['Natural Earth (public domain). 1:50m physical vectors: geography regions (ranges, plains, plateaus) and rivers. Simplified for the web.','https://www.naturalearthdata.com/downloads/50m-physical-vectors/'],
 S38:['geoBoundaries (CC BY 4.0), William & Mary geoLab. Russia and Ukraine ADM1 boundaries (simplified). Used for Donbas, Crimea, Kaliningrad, Moscow and the federal districts.','https://www.geoboundaries.org/'],
+S39:['Potsdam Conference, Protocol of the Proceedings, 1 August 1945, section VI: “City of Koenigsberg and the adjacent area”. Avalon Project, Yale Law School.','https://avalon.law.yale.edu/20th_century/decade17.asp'],
 S27:['SIPRI Yearbook 2025. World nuclear forces: Russia holds the largest inventory of nuclear warheads.','https://www.sipri.org/media/press-release/2025/nuclear-risks-grow-new-arms-race-looms-new-sipri-yearbook-out-now'],
 S28:['Encyclopaedia Britannica. “Russia”: area (~17.1 m km²), relief, climate, drainage, time zones.','https://www.britannica.com/place/Russia'],
 S29:['Euronews (11 Nov 2026). “Russia’s last openly critical newspaper Novaya Gazeta shuts its Moscow office”: closure announced 30 Oct, newsroom closed 9 Nov 2026.','https://www.euronews.com/2026/11/11/russias-last-openly-critical-newspaper-novaya-gazeta-shuts-its-moscow-office'],
@@ -960,6 +956,18 @@ function setEra(y){
   $('#era1945').setAttribute('aria-pressed',String(y===1945));$('#era2026').setAttribute('aria-pressed',String(y===2026));
   $('#eraTxt').textContent=y===1945?'Königsberg, the old Prussian capital, is taken by the Red Army and given to the USSR at Potsdam. Its German population is expelled; the city is renamed Kaliningrad and becomes the ice-free home of the Baltic Fleet, deep inside the Soviet buffer.':'Since 1991 it is an exclave between Poland and Lithuania, both NATO and EU members. It holds missiles and the Baltic Fleet, yet depends on transit through others. The narrow Suwałki gap to Belarus is one of NATO’s most watched spots.';
   var t=$('#eraTag');t.className='tag '+(y===1945?'m':'a');t.textContent=y===1945?'MARSHALL · CH. 1 [S1]':'OUR ANALYSIS [S26]';cite(t);
+  var cards=y===1945?[
+    ['Population','372 k','Königsberg city, German census of 1939; almost all Germans expelled by 1948'],
+    ['Transfer','1945','Potsdam: Königsberg and the adjacent area pass to the USSR [S39]'],
+    ['Baltic Fleet','Pillau','German naval port, renamed Baltiysk in 1946; ice-free all year'],
+    ['NATO neighbours','0','Poland a Soviet satellite, Lithuania a Soviet republic']
+  ]:[
+    ['Population','1.03 M','1,032,904 on 1 Jan 2025 [S26]'],
+    ['Suwałki gap','65 km','Polish–Lithuanian border to Belarus, most cited figure [S36]'],
+    ['Baltic Fleet','Baltiysk','Russia’s ice-free Baltic base'],
+    ['NATO neighbours','2','Poland and Lithuania, both NATO and EU members']
+  ];
+  var g=$('#eraCards');g.innerHTML=cards.map(function(c){return '<div class="card"><span class="k">'+c[0]+'</span><span class="big">'+c[1]+'</span><p>'+c[2]+'</p></div>'}).join('');cite(g);
 }
 $('#era1945').addEventListener('click',function(){setEra(1945)});$('#era2026').addEventListener('click',function(){setEra(2026)});
 function kalMap(){
